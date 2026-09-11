@@ -227,8 +227,22 @@ public class SIAPROYECTO {
     }
 
     private static String obtenerHistorialPorMes(Alumno alumno) {
-        if (alumno.getHistorial().isEmpty()) {
-            return "Sin registros de asistencia.";
+        int totalDias = alumno.getHistorial().size();
+        int presentes = 0;
+        
+        for (RegistroAsistencia reg : alumno.getHistorial()) {
+            if (reg.getEstado() == EstadoAsistencia.PRESENTE) {
+                presentes++;
+            }
+        }
+        
+        StringBuilder sb = new StringBuilder();
+        sb.append("Días considerados: ").append(totalDias)
+          .append(" | Presentes: ").append(presentes).append("\n\n");
+        
+        if (totalDias == 0) {
+            sb.append("Sin registros de asistencia.");
+            return sb.toString();
         }
         
         TreeMap<Integer, List<RegistroAsistencia>> agrupados = new TreeMap<>();
@@ -240,7 +254,7 @@ public class SIAPROYECTO {
             agrupados.get(mes).add(reg);
         }
         
-        StringBuilder sb = new StringBuilder("HISTORIAL ORDENADO POR MES:\n");
+        sb.append("HISTORIAL ORDENADO POR MES:\n");
         for (Map.Entry<Integer, List<RegistroAsistencia>> entrada : agrupados.entrySet()) {
             sb.append("\n--- Mes ").append(entrada.getKey()).append(" ---\n");
             for (RegistroAsistencia reg : entrada.getValue()) {
