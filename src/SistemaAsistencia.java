@@ -39,5 +39,11 @@ public class SistemaAsistencia {
         }
         return enRiesgo;
     }
-    
+    public boolean eliminarAlumno(int rut) {
+        if (alumnos.containsKey(rut)) {
+            alumnos.remove(rut);
+            return true;
+        }
+        return false;
+    }
 }
