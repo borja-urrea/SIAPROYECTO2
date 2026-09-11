@@ -218,9 +218,9 @@ public class SIAPROYECTO {
         
         StringBuilder sb = new StringBuilder("ALUMNOS POR CURSO:\n");
         for (Map.Entry<String, List<Alumno>> entrada : agrupados.entrySet()) {
-            sb.append("\n--- ").append(entrada.getKey()).append(" ---\n");
+            sb.append("\n----- ").append(entrada.getKey()).append(" ------\n");
             for (Alumno a : entrada.getValue()) {
-                sb.append("  ").append(a.toString()).append("\n");
+                sb.append(a.getRut()).append(" ").append(a.getNombre()).append("\n");
             }
         }
         return sb.toString();
