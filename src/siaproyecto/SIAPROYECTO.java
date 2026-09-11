@@ -15,7 +15,7 @@ public class SIAPROYECTO {
         
         GestorCSV.cargarDatos(sistema);
 
-        String[] opciones = {"Consola", "Ventana (GUI)"};
+        String[] opciones = {"Consola", "Ventana (Menú de opciones)"};
         int seleccion = JOptionPane.showOptionDialog(null, 
             "¿Cómo desea ejecutar el sistema?", "Inicio - Gestión Asistencia",
             JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, 
@@ -70,6 +70,8 @@ public class SIAPROYECTO {
                     System.out.println("Cursos ya registrados: " + obtenerCursos(sistema));
                     System.out.print("Curso: "); String c = sc.nextLine();
                     if (c.trim().isEmpty()) { System.out.println("Error: Curso vacío."); continue; }
+                    
+                    c = c.toUpperCase();
                     
                     sistema.agregarAlumno(new Alumno(r, n, c));
                     System.out.println("Alumno agregado exitosamente.");
@@ -140,6 +142,8 @@ public class SIAPROYECTO {
                     String mensajeCurso = "Cursos registrados: " + obtenerCursos(sistema) + "\n\nIngrese el Curso:";
                     String cur = JOptionPane.showInputDialog(mensajeCurso);
                     if (cur == null || cur.trim().isEmpty()) continue;
+                    
+                    cur = cur.toUpperCase();
                     
                     sistema.agregarAlumno(new Alumno(rut, nom, cur));
                     JOptionPane.showMessageDialog(null, "Agregado correctamente.");
