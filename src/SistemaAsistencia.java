@@ -30,15 +30,6 @@ public class SistemaAsistencia {
         marcarAsistencia(rut, new Fecha(dia, mes), estado);
     }
 
-    /*public List<Alumno> obtenerAlumnosEnRiesgo(double porcentajeMinimo) {
-        List<Alumno> enRiesgo = new ArrayList<>();
-        for(Alumno al : alumnos.values()) {
-            if(!al.getHistorial().isEmpty() && al.calcularPorcentajeAsistencia() < porcentajeMinimo) {
-                enRiesgo.add(al);
-            }
-        }
-        return enRiesgo;
-    }*/
 
     public boolean eliminarAlumno(int rut) {
         if (alumnos.containsKey(rut)) {

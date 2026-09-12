@@ -71,7 +71,12 @@ public class SIAPROYECTO {
                         System.out.println("Error: El RUT debe tener 8 o 9 dígitos.");
                         continue;
                     }
+                    
                     int r = Integer.parseInt(rutStr);
+                    if (sistema.getAlumnos().containsKey(r)) {
+                        System.out.println("Error: El RUT ya está registrado.");
+                        continue;
+                    }
                     
                     System.out.print("Nombre: "); 
                     String n = sc.nextLine();
@@ -232,7 +237,12 @@ public class SIAPROYECTO {
                         JOptionPane.showMessageDialog(null, "Error: El RUT debe tener 8 o 9 dígitos.", "RUT Inválido", JOptionPane.ERROR_MESSAGE);
                         continue;
                     }
+                    
                     int rut = Integer.parseInt(rutStr); 
+                    if (sistema.getAlumnos().containsKey(rut)) {
+                        JOptionPane.showMessageDialog(null, "Error: El RUT ya está registrado.", "RUT Duplicado", JOptionPane.ERROR_MESSAGE);
+                        continue;
+                    }
                     
                     String nom = JOptionPane.showInputDialog("Nombre:");
                     if (nom == null || nom.trim().isEmpty()) {
