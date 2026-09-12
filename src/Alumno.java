@@ -63,4 +63,28 @@ public class Alumno {
     public String toString() {
         return "RUT: " + rut + " | " + nombre + " (" + curso + ") | Asistencia: " + String.format("%.1f", calcularPorcentajeAsistencia()) + "%";
     }
+    public RegistroAsistencia buscarRegistro(int dia, int mes) {
+        for (RegistroAsistencia r : historial) {
+            if (r.getFecha().getDia() == dia && r.getFecha().getMes() == mes) return r;
+        }
+        return null;
+    }
+
+    public boolean eliminarRegistro(int dia, int mes) {
+        RegistroAsistencia r = buscarRegistro(dia, mes);
+        if (r != null) {
+            historial.remove(r);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean modificarRegistro(int dia, int mes, int nuevoEstado) {
+        RegistroAsistencia r = buscarRegistro(dia, mes);
+        if (r != null) {
+            r.setEstado(nuevoEstado);
+            return true;
+        }
+        return false;
+    }
 }

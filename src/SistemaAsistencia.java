@@ -46,4 +46,38 @@ public class SistemaAsistencia {
         }
         return false;
     }
+    
+    public Alumno buscarAlumno(String nombreExacto) {
+        for (Alumno a : alumnos.values()) {
+            if (a.getNombre().equalsIgnoreCase(nombreExacto.trim())) return a;
+        }
+        return null;
+    }
+
+    public void modificarAlumno(int rut, String nuevoNombre, String nuevoCurso) throws AlumnoNoEncontradoExceptions {
+        Alumno a = buscarAlumno(rut);
+        if (a != null) {
+            a.setNombre(nuevoNombre);
+            a.setCurso(nuevoCurso);
+        }
+    }
+
+    public List<Alumno> obtenerAlumnosEnRiesgo() {
+        List<Alumno> enRiesgo = new ArrayList<>();
+        for (Alumno a : alumnos.values()) {
+            int total = a.getHistorial().size();
+            if (total == 0) continue;
+            
+            int presentes = 0;
+            for (RegistroAsistencia r : a.getHistorial()) {
+                if (r.getEstado() == 1) presentes++;
+            }
+            
+            double porcentaje = (double) presentes / total;
+            if (porcentaje < 0.75) {
+                enRiesgo.add(a);
+            }
+        }
+        return enRiesgo;
+    }
 }
