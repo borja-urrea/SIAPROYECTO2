@@ -15,7 +15,7 @@ public class SIAPROYECTO {
         
         GestorCSV.cargarDatos(sistema);
 
-        String[] opciones = {"Consola", "Ventana (GUI)"};
+        String[] opciones = {"Consola", "Ventana (Menú de opciones)"};
         int seleccion = JOptionPane.showOptionDialog(null, 
             "¿Cómo desea ejecutar el sistema?", "Inicio - Gestión Asistencia",
             JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, 
@@ -355,7 +355,7 @@ public class SIAPROYECTO {
                     }
                     int mes = Integer.parseInt(mStr);
                     
-                    String estStr = JOptionPane.showInputDialog("Nuevo Estado:");
+                    String estStr = JOptionPane.showInputDialog("Nuevo Estado (1:Pres, 2:Falta, 3:FaltaExt, 4:SalTemp):");
                     if (estStr == null) {
                         continue;
                     }
@@ -479,6 +479,7 @@ public class SIAPROYECTO {
         
         return sb.toString();
     }
+
     private static String obtenerHistorialPorMes(Alumno alumno) {
         int totalDias = alumno.getHistorial().size();
         int presentes = 0;
@@ -488,6 +489,7 @@ public class SIAPROYECTO {
                 presentes++;
             }
         }
+        
         StringBuilder sb = new StringBuilder();
         sb.append("Días considerados: ").append(totalDias)
           .append(" | Presentes: ").append(presentes).append("\n\n");
@@ -496,6 +498,7 @@ public class SIAPROYECTO {
             sb.append("Sin registros de asistencia.");
             return sb.toString();
         }
+        
         TreeMap<Integer, List<RegistroAsistencia>> agrupados = new TreeMap<>();
         for (RegistroAsistencia reg : alumno.getHistorial()) {
             int mes = reg.getFecha().getMes(); 
@@ -504,6 +507,7 @@ public class SIAPROYECTO {
             }
             agrupados.get(mes).add(reg);
         }
+        
         sb.append("HISTORIAL ORDENADO POR MES:\n");
         for (Map.Entry<Integer, List<RegistroAsistencia>> entrada : agrupados.entrySet()) {
             sb.append("\n--- Mes ").append(entrada.getKey()).append(" ---\n");
