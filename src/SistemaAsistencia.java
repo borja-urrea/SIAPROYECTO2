@@ -30,7 +30,7 @@ public class SistemaAsistencia {
         marcarAsistencia(rut, new Fecha(dia, mes), estado);
     }
 
-    public List<Alumno> obtenerAlumnosEnRiesgo(double porcentajeMinimo) {
+    /*public List<Alumno> obtenerAlumnosEnRiesgo(double porcentajeMinimo) {
         List<Alumno> enRiesgo = new ArrayList<>();
         for(Alumno al : alumnos.values()) {
             if(!al.getHistorial().isEmpty() && al.calcularPorcentajeAsistencia() < porcentajeMinimo) {
@@ -38,7 +38,8 @@ public class SistemaAsistencia {
             }
         }
         return enRiesgo;
-    }
+    }*/
+
     public boolean eliminarAlumno(int rut) {
         if (alumnos.containsKey(rut)) {
             alumnos.remove(rut);
@@ -62,22 +63,4 @@ public class SistemaAsistencia {
         }
     }
 
-    public List<Alumno> obtenerAlumnosEnRiesgo() {
-        List<Alumno> enRiesgo = new ArrayList<>();
-        for (Alumno a : alumnos.values()) {
-            int total = a.getHistorial().size();
-            if (total == 0) continue;
-            
-            int presentes = 0;
-            for (RegistroAsistencia r : a.getHistorial()) {
-                if (r.getEstado() == 1) presentes++;
-            }
-            
-            double porcentaje = (double) presentes / total;
-            if (porcentaje < 0.75) {
-                enRiesgo.add(a);
-            }
-        }
-        return enRiesgo;
-    }
 }

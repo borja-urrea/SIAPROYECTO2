@@ -33,35 +33,13 @@ public class Alumno {
         historial.add(registro);
     }
 
-    public double calcularPorcentajeAsistencia() {
-        if (historial.isEmpty()) return 0.0;
-        int diasPresente = 0, salidasTempranas = 0, diasExcluidos = 0;
-        
-        for (RegistroAsistencia r : historial) {
-            switch(r.getEstado()){
-                case EstadoAsistencia.PRESENTE: 
-                    diasPresente++; 
-                    break;
-                case EstadoAsistencia.SALIDA_TEMPRANA: 
-                    diasPresente++; 
-                    salidasTempranas++; 
-                    break;
-                case EstadoAsistencia.INASISTENCIA_EXTRAORDINARIA: 
-                    diasExcluidos++; 
-                    break;
-            }
-        }
-        int penalizacion = salidasTempranas / 3;
-        int asistenciasEfectivas = diasPresente - penalizacion;
-        int totalDiasEvaluables = historial.size() - diasExcluidos;
-        
-        if (totalDiasEvaluables <= 0) return 0.0;
-        return ((double) asistenciasEfectivas / totalDiasEvaluables) * 100;
-    }
-
+    /* Tenemos la idea de implementar aqui un metodo para calcular y mostrar a los alumnos con riesgo de repitencia, por tiempo
+    no pudimos en esta entrega, pero para la proxima, ademas del feedback queremos implementarlo*/ 
+    
+    
     @Override
     public String toString() {
-        return "RUT: " + rut + " | " + nombre + " (" + curso + ") | Asistencia: " + String.format("%.1f", calcularPorcentajeAsistencia()) + "%";
+        return "RUT: " + rut + " - Nombre: " + nombre + " - Curso: " + curso;
     }
     public RegistroAsistencia buscarRegistro(int dia, int mes) {
         for (RegistroAsistencia r : historial) {

@@ -46,8 +46,7 @@ public class SIAPROYECTO {
             System.out.println("7. Editar Asistencia");
             System.out.println("8. Eliminar Asistencia");
             System.out.println("9. Buscar Asistencia Específica");
-            System.out.println("10. Alerta Repitencia (<75%)");
-            System.out.println("11. Salir");
+            System.out.println("10. Salir");
             System.out.print("Opción: ");
             
             try {
@@ -187,22 +186,11 @@ public class SIAPROYECTO {
                         System.out.println("No existe registro en esa fecha.");
                     }
                     
-                } else if (opcion == 10) {
-                    List<Alumno> riesgo = sistema.obtenerAlumnosEnRiesgo();
-                    
-                    if (riesgo.isEmpty()) {
-                        System.out.println("Ningún alumno en riesgo de repitencia.");
-                    } else {
-                        System.out.println("ALUMNOS EN RIESGO DE REPITENCIA (<75% asistencia):");
-                        for (Alumno a : riesgo) {
-                            System.out.println(a.getRut() + " - " + a.getNombre() + " (" + a.getCurso() + ")");
-                        }
-                    }
                 }
             } catch (Exception ex) {
                 System.out.println("Error: " + ex.getMessage());
             }
-        } while (opcion != 11);
+        } while (opcion != 10);
     }
 
     private static void iniciarVentana(SistemaAsistencia sistema) {
@@ -216,14 +204,13 @@ public class SIAPROYECTO {
             "7. Editar Asistencia", 
             "8. Eliminar Asistencia", 
             "9. Buscar Asistencia Específica", 
-            "10. Alerta Repitencia", 
-            "11. Salir"
+            "10. Salir"
         };
         
         while (true) {
             String seleccion = (String) JOptionPane.showInputDialog(null, "Seleccione una operación:", "Menú Principal", JOptionPane.QUESTION_MESSAGE, null, menu, menu[0]);
             
-            if (seleccion == null || seleccion.equals("11. Salir")) {
+            if (seleccion == null || seleccion.equals("10. Salir")) {
                 break;
             }
 
@@ -422,18 +409,6 @@ public class SIAPROYECTO {
                         JOptionPane.showMessageDialog(null, "Registro no encontrado.", "Búsqueda", JOptionPane.WARNING_MESSAGE);
                     }
                     
-                } else if (seleccion.startsWith("10")) {
-                    List<Alumno> riesgo = sistema.obtenerAlumnosEnRiesgo();
-                    
-                    if (riesgo.isEmpty()) {
-                        JOptionPane.showMessageDialog(null, "Ningún alumno en riesgo.");
-                    } else {
-                        StringBuilder sb = new StringBuilder("ALUMNOS EN RIESGO DE REPITENCIA (<75% asistencia):\n\n");
-                        for (Alumno a : riesgo) {
-                            sb.append(a.getRut()).append(" - ").append(a.getNombre()).append("\n");
-                        }
-                        JOptionPane.showMessageDialog(null, sb.toString());
-                    }
                 }
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "Error: Verifique los datos ingresados.");
