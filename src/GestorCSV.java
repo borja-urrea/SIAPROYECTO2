@@ -12,13 +12,18 @@ public class GestorCSV {
         try (BufferedReader br = new BufferedReader(new FileReader("alumnos.csv"))) {
             String linea;
             while ((linea = br.readLine()) != null) {
+                if (linea.trim().isEmpty()) continue; 
                 String[] datos = linea.split(",");
                 if(datos.length == 3) {
-                    int rut = Integer.parseInt(datos[0]); 
-                    sistema.agregarAlumno(new Alumno(rut, datos[1], datos[2]));
+                    try {
+                        int rut = Integer.parseInt(datos[0].trim()); 
+                        sistema.agregarAlumno(new Alumno(rut, datos[1].trim(), datos[2].trim()));
+                    } catch (NumberFormatException e) {
+                    }
                 }
             }
         } catch (Exception e) { 
+            System.out.println("Aviso: No se pudo cargar alumnos.csv (puede que no exista aun).");
         }
     }
     
@@ -26,22 +31,30 @@ public class GestorCSV {
         try (BufferedReader br = new BufferedReader(new FileReader("asistencias.csv"))){
             String linea;
             while ((linea = br.readLine()) != null){
+                if (linea.trim().isEmpty()) continue;
                 String[] datos = linea.split(",");
-                if(datos.length == 4) {
-                    int rut = Integer.parseInt(datos[0]);
-                    int dia = Integer.parseInt(datos[1]);
-                    int mes = Integer.parseInt(datos[2]);
-                    int estado = Integer.parseInt(datos[3]);
-                    sistema.marcarAsistencia(rut, dia, mes, estado);
+                if(datos.length >= 4) {
+                    try {
+                        int rut = Integer.parseInt(datos[0].trim());
+                        int dia = Integer.parseInt(datos[1].trim());
+                        int mes = Integer.parseInt(datos[2].trim());
+                        int estado = Integer.parseInt(datos[3].trim());
+                        
+                        sistema.marcarAsistencia(rut, dia, mes, estado);
+                    } catch (Exception e) {
+                    }
                 }
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            System.out.println("Aviso: No se pudo cargar asistencias.csv (puede que no exista aun).");
+        }
     }
     
     public static void guardarDatos(SistemaAsistencia sistema) {
         guardarAlumnos(sistema);
         guardarAsistencias(sistema);
     }
+
     private static void guardarAlumnos(SistemaAsistencia sistema) {
         try (PrintWriter pw = new PrintWriter(new FileWriter("alumnos.csv"))) {
             for (Alumno al : sistema.getAlumnos().values()) {
@@ -51,6 +64,7 @@ public class GestorCSV {
             System.out.println("Error guardando alumnos: " + e.getMessage());
         }
     }
+
     private static void guardarAsistencias(SistemaAsistencia sistema) {
         try (PrintWriter pw = new PrintWriter(new FileWriter("asistencias.csv"))) {
             for (Alumno al : sistema.getAlumnos().values()) {

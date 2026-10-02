@@ -14,6 +14,10 @@ public class Alumno {
         this.curso = curso;
         this.historial = new ArrayList<>();
     }
+
+    public Alumno(int rut, String nombre) {
+        this(rut, nombre, "SIN ASIGNAR"); 
+    }
     
     public int getRut() { return rut; }
     public void setRut(int rut) { this.rut = rut; }
@@ -22,7 +26,7 @@ public class Alumno {
     public String getCurso() { return curso; }
     public void setCurso(String curso) { this.curso = curso; }
     
-    public List<RegistroAsistencia> getHistorial() { return historial; }
+    public List<RegistroAsistencia> getHistorial() { return java.util.Collections.unmodifiableList(historial); }
     
     public void agregarRegistro(RegistroAsistencia registro) throws RegistroDupException {
         for (RegistroAsistencia r : historial){
@@ -32,10 +36,42 @@ public class Alumno {
         }
         historial.add(registro);
     }
-
-    /* Tenemos la idea de implementar aqui un metodo para calcular y mostrar a los alumnos con riesgo de repitencia, por tiempo
-    no pudimos en esta entrega, pero para la proxima, ademas del feedback queremos implementarlo*/ 
     
+    public void agregarRegistro(int dia, int mes, int estado) throws RegistroDupException {
+        Fecha nuevaFecha = new Fecha(dia, mes);
+        RegistroAsistencia nuevoRegistro = new RegistroAsistencia(nuevaFecha, estado);
+        this.agregarRegistro(nuevoRegistro); // Llama al método original
+    } 
+    
+    public double calcularPorcentajeAsistencia() {
+        if (historial.isEmpty()) {
+            return 100.0; 
+        }
+
+        int presentes = 0;
+        int faltasExt = 0;
+        int salidasTemp = 0;
+
+        for (RegistroAsistencia r : historial) {
+            switch(r.getEstado()) {
+                case 1: presentes++; break;
+                case 3: faltasExt++; break;
+                case 4: salidasTemp++; break;
+            }
+        }
+        int diasEvaluables = historial.size() - faltasExt;
+        
+        if (diasEvaluables == 0) {
+            return 100.0; 
+        }
+
+        int diasAsistidos = presentes + salidasTemp;
+        int penalizacion = salidasTemp / 3;
+        int asistenciaEfectiva = diasAsistidos - penalizacion;
+
+        return ((double) asistenciaEfectiva / diasEvaluables) * 100.0;
+    }
+
     
     @Override
     public String toString() {

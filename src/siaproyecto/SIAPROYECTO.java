@@ -46,7 +46,8 @@ public class SIAPROYECTO {
             System.out.println("7. Editar Asistencia");
             System.out.println("8. Eliminar Asistencia");
             System.out.println("9. Buscar Asistencia Específica");
-            System.out.println("10. Salir");
+            System.out.println("10. Ver Alumnos en Riesgo");
+            System.out.println("11. Salir");
             System.out.print("Opción: ");
             
             try {
@@ -86,15 +87,14 @@ public class SIAPROYECTO {
                     }
                     
                     System.out.println("Cursos ya registrados: " + obtenerCursos(sistema));
-                    System.out.print("Curso: "); 
+                    System.out.print("Curso (Deje en blanco para SIN ASIGNAR): "); 
                     String c = sc.nextLine();
-                    if (c.trim().isEmpty()) { 
-                        System.out.println("Error: Curso vacío."); 
-                        continue; 
-                    }
                     
-                    c = c.toUpperCase();
-                    sistema.agregarAlumno(new Alumno(r, n, c));
+                    if (c.trim().isEmpty()) {
+                        sistema.agregarAlumno(new Alumno(r, n));
+                    } else {
+                        sistema.agregarAlumno(new Alumno(r, n, c.toUpperCase()));
+                    }
                     System.out.println("Alumno agregado exitosamente.");
                     
                 } else if (opcion == 3) {
@@ -123,8 +123,8 @@ public class SIAPROYECTO {
                     
                 } else if (opcion == 5) {
                     System.out.print("RUT del Alumno: "); 
-                    int r = Integer.parseInt(sc.nextLine());
-                    Alumno al = sistema.buscarAlumno(r);
+                    String rutStr = sc.nextLine();
+                    Alumno al = sistema.buscarAlumno(rutStr);
                     
                     System.out.println(al.toString());
                     System.out.println(obtenerHistorialPorMes(al));
@@ -144,7 +144,7 @@ public class SIAPROYECTO {
                     
                 } else if (opcion == 7) {
                     System.out.print("RUT: "); 
-                    int r = Integer.parseInt(sc.nextLine());
+                    String rutStr = sc.nextLine();
                     System.out.print("Día (número): "); 
                     int d = Integer.parseInt(sc.nextLine());
                     System.out.print("Mes (número): "); 
@@ -152,7 +152,7 @@ public class SIAPROYECTO {
                     System.out.print("Nuevo Estado (1:Pres, 2:Falta, 3:FaltaExt, 4:SalTemp): "); 
                     int est = Integer.parseInt(sc.nextLine());
                     
-                    Alumno al = sistema.buscarAlumno(r);
+                    Alumno al = sistema.buscarAlumno(rutStr);
                     if (al.modificarRegistro(d, m, est)) {
                         System.out.println("Registro editado correctamente.");
                     } else {
@@ -161,13 +161,13 @@ public class SIAPROYECTO {
                     
                 } else if (opcion == 8) {
                     System.out.print("RUT: "); 
-                    int r = Integer.parseInt(sc.nextLine());
+                    String rutStr = sc.nextLine();
                     System.out.print("Día (número): "); 
                     int d = Integer.parseInt(sc.nextLine());
                     System.out.print("Mes (número): "); 
                     int m = Integer.parseInt(sc.nextLine());
                     
-                    Alumno al = sistema.buscarAlumno(r);
+                    Alumno al = sistema.buscarAlumno(rutStr);
                     if (al.eliminarRegistro(d, m)) {
                         System.out.println("Registro eliminado.");
                     } else {
@@ -176,13 +176,13 @@ public class SIAPROYECTO {
                     
                 } else if (opcion == 9) {
                     System.out.print("RUT: "); 
-                    int r = Integer.parseInt(sc.nextLine());
+                    String rutStr = sc.nextLine();
                     System.out.print("Día (número): "); 
                     int d = Integer.parseInt(sc.nextLine());
                     System.out.print("Mes (número): "); 
                     int m = Integer.parseInt(sc.nextLine());
                     
-                    Alumno al = sistema.buscarAlumno(r);
+                    Alumno al = sistema.buscarAlumno(rutStr);
                     RegistroAsistencia reg = al.buscarRegistro(d, m);
                     
                     if (reg != null) {
@@ -191,11 +191,13 @@ public class SIAPROYECTO {
                         System.out.println("No existe registro en esa fecha.");
                     }
                     
+                } else if (opcion == 10) {
+                    System.out.println("\n" + sistema.obtenerAlumnosEnRiesgo());
                 }
             } catch (Exception ex) {
                 System.out.println("Error: " + ex.getMessage());
             }
-        } while (opcion != 10);
+        } while (opcion != 11);
     }
 
     private static void iniciarVentana(SistemaAsistencia sistema) {
@@ -209,25 +211,26 @@ public class SIAPROYECTO {
             "7. Editar Asistencia", 
             "8. Eliminar Asistencia", 
             "9. Buscar Asistencia Específica", 
-            "10. Salir"
+            "10. Ver Alumnos en Riesgo",
+            "11. Salir"
         };
         
         while (true) {
             String seleccion = (String) JOptionPane.showInputDialog(null, "Seleccione una operación:", "Menú Principal", JOptionPane.QUESTION_MESSAGE, null, menu, menu[0]);
             
-            if (seleccion == null || seleccion.equals("10. Salir")) {
+            if (seleccion == null || seleccion.equals("11. Salir")) {
                 break;
             }
 
             try {
-                if (seleccion.startsWith("1")) {
+                if (seleccion.startsWith("1.")) {
                     if (sistema.getAlumnos().isEmpty()) {
                         JOptionPane.showMessageDialog(null, "No hay alumnos registrados.");
                     } else {
                         JOptionPane.showMessageDialog(null, obtenerListadoPorCurso(sistema), "Lista de Alumnos", JOptionPane.INFORMATION_MESSAGE);
                     }
                     
-                } else if (seleccion.startsWith("2")) {
+                } else if (seleccion.startsWith("2.")) {
                     String rutStr = JOptionPane.showInputDialog("RUT (solo números, 8 o 9 dígitos):");
                     if (rutStr == null) {
                         continue;
@@ -249,17 +252,19 @@ public class SIAPROYECTO {
                         continue;
                     }
                     
-                    String mensajeCurso = "Cursos registrados: " + obtenerCursos(sistema) + "\n\nIngrese el Curso:";
+                    String mensajeCurso = "Cursos registrados: " + obtenerCursos(sistema) + "\n\nIngrese el Curso (o deje vacío para SIN ASIGNAR):";
                     String cur = JOptionPane.showInputDialog(mensajeCurso);
-                    if (cur == null || cur.trim().isEmpty()) {
+                    
+                    if (cur == null) {
                         continue;
+                    } else if (cur.trim().isEmpty()) {
+                        sistema.agregarAlumno(new Alumno(rut, nom));
+                    } else {
+                        sistema.agregarAlumno(new Alumno(rut, nom, cur.toUpperCase()));
                     }
                     
-                    cur = cur.toUpperCase();
-                    sistema.agregarAlumno(new Alumno(rut, nom, cur));
                     JOptionPane.showMessageDialog(null, "Agregado correctamente.");
-                    
-                } else if (seleccion.startsWith("3")) {
+                } else if (seleccion.startsWith("3.")) {
                     String rutStr = JOptionPane.showInputDialog("RUT a editar:");
                     if (rutStr == null) {
                         continue;
@@ -280,7 +285,7 @@ public class SIAPROYECTO {
                     sistema.modificarAlumno(rut, nom, cur);
                     JOptionPane.showMessageDialog(null, "Modificado correctamente.");
                     
-                } else if (seleccion.startsWith("4")) {
+                } else if (seleccion.startsWith("4.")) {
                     String rutStr = JOptionPane.showInputDialog("RUT a eliminar:");
                     if (rutStr == null) {
                         continue;
@@ -293,19 +298,18 @@ public class SIAPROYECTO {
                         JOptionPane.showMessageDialog(null, "No se encontró el alumno.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                     
-                } else if (seleccion.startsWith("5")) {
+                } else if (seleccion.startsWith("5.")) {
                     String rutStr = JOptionPane.showInputDialog("RUT:");
                     if (rutStr == null) {
                         continue;
                     }
-                    int rut = Integer.parseInt(rutStr);
-                    Alumno al = sistema.buscarAlumno(rut);
+                    Alumno al = sistema.buscarAlumno(rutStr);
                     
                     StringBuilder ficha = new StringBuilder(al.toString());
                     ficha.append("\n\n").append(obtenerHistorialPorMes(al));
                     JOptionPane.showMessageDialog(null, ficha.toString(), "Ficha del alumno", JOptionPane.INFORMATION_MESSAGE);
                     
-                } else if (seleccion.startsWith("6")) {
+                } else if (seleccion.startsWith("6.")) {
                     String rutStr = JOptionPane.showInputDialog("RUT:");
                     if (rutStr == null) {
                         continue;
@@ -333,12 +337,11 @@ public class SIAPROYECTO {
                     sistema.marcarAsistencia(rut, dia, mes, estado);
                     JOptionPane.showMessageDialog(null, "Asistencia registrada.");
                     
-                } else if (seleccion.startsWith("7")) {
+                } else if (seleccion.startsWith("7.")) {
                     String rutStr = JOptionPane.showInputDialog("RUT:");
                     if (rutStr == null) {
                         continue;
                     }
-                    int rut = Integer.parseInt(rutStr);
                     
                     String dStr = JOptionPane.showInputDialog("Día (número):");
                     if (dStr == null) {
@@ -358,19 +361,18 @@ public class SIAPROYECTO {
                     }
                     int estado = Integer.parseInt(estStr);
                     
-                    Alumno al = sistema.buscarAlumno(rut);
+                    Alumno al = sistema.buscarAlumno(rutStr);
                     if (al.modificarRegistro(dia, mes, estado)) {
                         JOptionPane.showMessageDialog(null, "Registro editado.");
                     } else {
                         JOptionPane.showMessageDialog(null, "Registro no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                     
-                } else if (seleccion.startsWith("8")) {
+                } else if (seleccion.startsWith("8.")) {
                     String rutStr = JOptionPane.showInputDialog("RUT:");
                     if (rutStr == null) {
                         continue;
                     }
-                    int rut = Integer.parseInt(rutStr);
                     
                     String dStr = JOptionPane.showInputDialog("Día (número):");
                     if (dStr == null) {
@@ -384,19 +386,18 @@ public class SIAPROYECTO {
                     }
                     int mes = Integer.parseInt(mStr);
                     
-                    Alumno al = sistema.buscarAlumno(rut);
+                    Alumno al = sistema.buscarAlumno(rutStr);
                     if (al.eliminarRegistro(dia, mes)) {
                         JOptionPane.showMessageDialog(null, "Registro eliminado.");
                     } else {
                         JOptionPane.showMessageDialog(null, "Registro no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                     
-                } else if (seleccion.startsWith("9")) {
+                } else if (seleccion.startsWith("9.")) {
                     String rutStr = JOptionPane.showInputDialog("RUT:");
                     if (rutStr == null) {
                         continue;
                     }
-                    int rut = Integer.parseInt(rutStr);
                     
                     String dStr = JOptionPane.showInputDialog("Día (número):");
                     if (dStr == null) {
@@ -410,7 +411,7 @@ public class SIAPROYECTO {
                     }
                     int mes = Integer.parseInt(mStr);
                     
-                    Alumno al = sistema.buscarAlumno(rut);
+                    Alumno al = sistema.buscarAlumno(rutStr);
                     RegistroAsistencia reg = al.buscarRegistro(dia, mes);
                     
                     if (reg != null) {
@@ -419,6 +420,9 @@ public class SIAPROYECTO {
                         JOptionPane.showMessageDialog(null, "Registro no encontrado.", "Búsqueda", JOptionPane.WARNING_MESSAGE);
                     }
                     
+                } else if (seleccion.startsWith("10.")) {
+                    String reporteRiesgo = sistema.obtenerAlumnosEnRiesgo();
+                    JOptionPane.showMessageDialog(null, reporteRiesgo, "Reporte de Riesgo", JOptionPane.WARNING_MESSAGE);
                 }
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "Error: Verifique los datos ingresados.");
