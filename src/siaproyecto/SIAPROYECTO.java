@@ -127,6 +127,7 @@ public class SIAPROYECTO {
                     Alumno al = sistema.buscarAlumno(rutStr);
                     
                     System.out.println(al.toString());
+                    System.out.printf("Porcentaje de Asistencia: %.1f%%\n", al.calcularPorcentajeAsistencia());
                     System.out.println(obtenerHistorialPorMes(al));
                     
                 } else if (opcion == 6) {
@@ -306,6 +307,7 @@ public class SIAPROYECTO {
                     Alumno al = sistema.buscarAlumno(rutStr);
                     
                     StringBuilder ficha = new StringBuilder(al.toString());
+                    ficha.append("\nPorcentaje de Asistencia: ").append(String.format("%.1f", al.calcularPorcentajeAsistencia())).append("%");
                     ficha.append("\n\n").append(obtenerHistorialPorMes(al));
                     JOptionPane.showMessageDialog(null, ficha.toString(), "Ficha del alumno", JOptionPane.INFORMATION_MESSAGE);
                     
