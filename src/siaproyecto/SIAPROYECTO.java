@@ -8,8 +8,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Clase principal que provee la interfaz de usuario del Sistema de Asistencia.
+ * Permite ejecutar el programa mediante consola de texto o ventanas de diálogo emergentes,
+ * actuando como la capa de presentación que interactúa con la lógica de negocio y la persistencia.
+ */
 public class SIAPROYECTO {
 
+    /**
+     * Método de entrada principal de la aplicación.
+     * Inicializa el sistema, carga los datos persistidos y solicita al usuario
+     * el modo de ejecución deseado antes de entrar al ciclo principal.
+     * 
+     * @param args Argumentos de línea de comandos (no utilizados).
+     */
     public static void main(String[] args) {
         SistemaAsistencia sistema = new SistemaAsistencia();
         
@@ -31,6 +43,11 @@ public class SIAPROYECTO {
         System.out.println("Datos guardados en alumnos.csv y asistencias.csv. Sistema cerrado correctamente.");
     }
 
+    /**
+     * Despliega y gestiona el menú principal utilizando la consola estándar (System.in/out).
+     * 
+     * @param sistema Instancia central que contiene la lógica y los datos del sistema.
+     */
     private static void iniciarConsola(SistemaAsistencia sistema) {
         Scanner sc = new Scanner(System.in);
         int opcion = 0;
@@ -201,6 +218,11 @@ public class SIAPROYECTO {
         } while (opcion != 11);
     }
 
+    /**
+     * Despliega y gestiona el menú principal utilizando componentes visuales (JOptionPane).
+     * 
+     * @param sistema Instancia central que contiene la lógica y los datos del sistema.
+     */
     private static void iniciarVentana(SistemaAsistencia sistema) {
         String[] menu = {
             "1. Listar Alumnos", 
@@ -432,6 +454,13 @@ public class SIAPROYECTO {
         }
     }
 
+    /**
+     * Extrae un listado de todos los cursos únicos registrados en el sistema,
+     * ordenados alfabéticamente mediante el uso de una colección TreeSet.
+     * 
+     * @param sistema Instancia central para acceder a los registros.
+     * @return Una cadena de texto con los cursos separados por comas.
+     */
     private static String obtenerCursos(SistemaAsistencia sistema) {
         TreeSet<String> cursos = new TreeSet<>();
         
@@ -446,6 +475,13 @@ public class SIAPROYECTO {
         return String.join(", ", cursos);
     }
 
+    /**
+     * Genera un reporte formateado agrupando a los alumnos por su respectivo curso.
+     * Utiliza un TreeMap para mantener el orden alfabético de los cursos automáticamente.
+     * 
+     * @param sistema Instancia central del sistema.
+     * @return Cadena de texto estructurada con los estudiantes divididos por curso.
+     */
     private static String obtenerListadoPorCurso(SistemaAsistencia sistema) {
         TreeMap<String, List<Alumno>> agrupados = new TreeMap<>();
         
@@ -471,6 +507,13 @@ public class SIAPROYECTO {
         return sb.toString();
     }
 
+    /**
+     * Estructura el historial de asistencia de un alumno agrupándolo por meses.
+     * Facilita la visualización cronológica mediante una estructura anidada TreeMap.
+     * 
+     * @param alumno El estudiante cuyo historial será procesado.
+     * @return Cadena de texto formateada con los registros ordenados por mes.
+     */
     private static String obtenerHistorialPorMes(Alumno alumno) {
         int totalDias = alumno.getHistorial().size();
         int presentes = 0;

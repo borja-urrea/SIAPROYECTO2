@@ -1,13 +1,29 @@
 package siaproyecto;
 import java.io.*;
 
+/**
+ * Gestor de persistencia del sistema basado en archivos planos (CSV).
+ * Separa la carga y escritura de la información en flujos independientes para
+ * alumnos y sus historiales de asistencia.
+ */
 public class GestorCSV {
     
+    /**
+     * Ejecuta el proceso de carga completa (alumnos y asistencias) al iniciar la aplicación.
+     * 
+     * @param sistema Instancia en memoria donde se alojarán los datos recuperados.
+     */
     public static void cargarDatos(SistemaAsistencia sistema){
         cargarDatosAlumnos(sistema);
         cargarAsistencias(sistema);
     }
     
+    /**
+     * Recupera los perfiles de los estudiantes desde el archivo alumnos.csv.
+     * Implementa manejo de excepciones para ignorar líneas corruptas y continuar la lectura.
+     * 
+     * @param sistema Instancia central para poblar la colección de alumnos.
+     */
     public static void cargarDatosAlumnos(SistemaAsistencia sistema) {
         try (BufferedReader br = new BufferedReader(new FileReader("alumnos.csv"))) {
             String linea;
@@ -27,6 +43,11 @@ public class GestorCSV {
         }
     }
     
+    /**
+     * Recupera los historiales de asistencia cruzándolos con los alumnos previamente cargados.
+     * 
+     * @param sistema Instancia central donde se registrarán las fechas recuperadas.
+     */
     private static void cargarAsistencias(SistemaAsistencia sistema){
         try (BufferedReader br = new BufferedReader(new FileReader("asistencias.csv"))){
             String linea;
@@ -50,11 +71,22 @@ public class GestorCSV {
         }
     }
     
+    /**
+     * Dispara el volcado en disco de todos los registros que actualmente
+     * residen en la memoria principal.
+     * 
+     * @param sistema Instancia central que contiene la información actualizada.
+     */
     public static void guardarDatos(SistemaAsistencia sistema) {
         guardarAlumnos(sistema);
         guardarAsistencias(sistema);
     }
 
+    /**
+     * Escribe la información general de los estudiantes en su respectivo archivo CSV.
+     * 
+     * @param sistema Instancia central que provee el catálogo de estudiantes.
+     */
     private static void guardarAlumnos(SistemaAsistencia sistema) {
         try (PrintWriter pw = new PrintWriter(new FileWriter("alumnos.csv"))) {
             for (Alumno al : sistema.getAlumnos().values()) {
@@ -65,6 +97,12 @@ public class GestorCSV {
         }
     }
 
+    /**
+     * Escribe la totalidad de los historiales de asistencia en su respectivo archivo CSV.
+     * Recorre cada alumno y extrae sus fechas para generar un formato plano estructurado.
+     * 
+     * @param sistema Instancia central de la cual se recuperan los datos.
+     */
     private static void guardarAsistencias(SistemaAsistencia sistema) {
         try (PrintWriter pw = new PrintWriter(new FileWriter("asistencias.csv"))) {
             for (Alumno al : sistema.getAlumnos().values()) {
