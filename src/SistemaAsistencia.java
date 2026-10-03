@@ -82,6 +82,7 @@ public class SistemaAsistencia {
     
     /**
      * Sobrecarga que permite registrar una asistencia a partir de datos primitivos.
+     * Delega la creación de los objetos internos a la sobrecarga correspondiente en Alumno.
      * 
      * @param rut RUT del alumno.
      * @param dia Día correspondiente a la asistencia.
@@ -91,7 +92,8 @@ public class SistemaAsistencia {
      * @throws RegistroDupException Si la fecha ya se encuentra ingresada.
      */
     public void marcarAsistencia(int rut, int dia, int mes, int estado) throws AlumnoNoEncontradoExceptions, RegistroDupException {
-        marcarAsistencia(rut, new Fecha(dia, mes), estado);
+        Alumno alumno = buscarAlumno(rut);
+        alumno.agregarRegistro(dia, mes, estado);
     }
 
     /**
